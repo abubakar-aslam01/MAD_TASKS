@@ -1,7 +1,7 @@
-// library_lab.dart  -  Campus Library System
+// library_lab.dart - Campus Library System
 // Name: ____________________   Roll no: ____________
 
-const String rollNo = '04072313027'; // e.g. '21F-0347'
+const String rollNo = '040732313027'; // e.g. '21F-0347'
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
@@ -31,6 +31,22 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
+// ---------- Step 1 ----------
+class LibraryItem {
+  final String title;
+  final int year;
+
+  LibraryItem(this.title, this.year);
+}
+
+class Book extends LibraryItem {
+  final int pages;
+
+  Book(super.title, super.year, this.pages);
+}
+
+Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
+
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -47,6 +63,14 @@ void main() {
 
 void step1() {
   print('--- Step 1 ---');
+  final b = mainBook();
+  LibraryItem item = b;
+  print('Step 1: ${b.title} (${b.year}), ${b.pages} pages');
+  print('Step 1: stored as LibraryItem: ${item.title}');
+  print('Step 1: runtimeType = ${item.runtimeType}');
+  // Think: item.pages is a compile error because Dart checks the variable's
+  // declared type (LibraryItem), which has no `pages`. The object really has
+  // it, but the compiler only trusts the declared type.
 }
 
 void step2() {
