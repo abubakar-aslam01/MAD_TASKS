@@ -31,21 +31,39 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
-// ---------- Step 1 ----------
 class LibraryItem {
   final String title;
   final int year;
 
   LibraryItem(this.title, this.year);
+
+  String describe() => '$title ($year)';
 }
 
 class Book extends LibraryItem {
   final int pages;
 
   Book(super.title, super.year, this.pages);
+
+  @override
+  String describe() => '${super.describe()}, $pages pages';
+}
+
+class Magazine extends LibraryItem {
+  final int issue;
+
+  Magazine(super.title, super.year, this.issue);
+
+  @override
+  String describe() => '${super.describe()}, issue $issue';
 }
 
 Book mainBook() => Book(titles[u], yearOf(u), 100 + 3 * seed);
+
+Magazine mainMagazine() {
+  final i = (u + 1) % 10;
+  return Magazine(titles[i], yearOf(i), 1 + (t + u) % 12);
+}
 
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
@@ -75,6 +93,11 @@ void step1() {
 
 void step2() {
   print('--- Step 2 ---');
+  print('Step 2: ${mainBook().describe()}');
+  print('Step 2: ${mainMagazine().describe()}');
+  // Think: without @override, descibe() would just be a brand new method and
+  // nothing would warn you; calling describe() would still run the parent's
+  // version, so the output would silently be wrong.
 }
 
 void step3() {
