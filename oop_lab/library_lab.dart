@@ -38,6 +38,16 @@ abstract class Borrowable {
   void giveBack();
 }
 
+// ---------- Step 5: mixin ----------
+mixin Renewable {
+  int renewals = 0;
+  bool renew(int limit) {
+    if (renewals >= limit) return false;
+    renewals++;
+    return true;
+  }
+}
+
 abstract class LibraryItem {
   final String title;
   final int year;
@@ -49,7 +59,7 @@ abstract class LibraryItem {
   int lateFee(int days);
 }
 
-class Book extends LibraryItem implements Borrowable {
+class Book extends LibraryItem with Renewable implements Borrowable {
   final int pages;
   bool _out = false;
 
@@ -83,7 +93,7 @@ class Magazine extends LibraryItem {
   int lateFee(int days) => days * (feePerDay ~/ 2);
 }
 
-class Dvd extends LibraryItem {
+class Dvd extends LibraryItem with Renewable {
   final int minutes;
 
   Dvd(super.title, super.year, this.minutes);
@@ -177,6 +187,17 @@ void step4() {
 
 void step5() {
   print('--- Step 5 ---');
+  final book = mainBook();
+  int ok = 0;
+  for (int i = 0; i < renewAttempts; i++) {
+    if (book.renew(renewLimit)) ok++;
+  }
+  print('Step 5: renewed $ok of $renewAttempts attempts (limit $renewLimit)');
+  print('Step 5: renew once more? ${book.renew(renewLimit)}');
+  print('Step 5: dvd can renew too? ${mainDvd().renew(1)}');
+  // Think: putting renew in LibraryItem would give it to Magazine too, which
+  // must not renew. A mixin lets us hand the code to only the classes that
+  // need it, even though they are not related by inheritance.
 }
 
 void step6() {
