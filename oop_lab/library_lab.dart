@@ -130,6 +130,19 @@ enum MemberType {
   int applyDiscount(int fee) => fee - (fee * discountPercent) ~/ 100;
 }
 
+// ---------- Step 7: extensions ----------
+extension MoneyText on int {
+  String get rs => 'Rs $this';
+}
+
+extension Initials on String {
+  String get initials => split(' ').map((w) => w[0]).join();
+}
+
+extension ShelfMath on List<LibraryItem> {
+  int totalLateFee(int days) => fold(0, (sum, i) => sum + i.lateFee(days));
+}
+
 void main() {
   print('Seed: $seed (t=$t, u=$u)');
   step1();
@@ -227,6 +240,16 @@ void step6() {
 
 void step7() {
   print('--- Step 7 ---');
+  final type = MemberType.values[seed % 3];
+  final discounted = type.applyDiscount(mainBook().lateFee(daysLate));
+  final shelf = <LibraryItem>[mainBook(), mainMagazine(), mainDvd()];
+  print('Step 7: ${discounted.rs}');
+  print('Step 7: initials of "${titles[u]}" = ${titles[u].initials}');
+  print(
+    'Step 7: shelf fee for $daysLate days = ${shelf.totalLateFee(daysLate).rs}',
+  );
+  // Think: 72.rs reads left to right like a property of the number, is easy
+  // to find with autocomplete, and chains nicely, unlike a loose rs(72).
 }
 
 void step8() {
