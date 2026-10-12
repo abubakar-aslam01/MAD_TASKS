@@ -1,7 +1,7 @@
 // library_lab.dart - Campus Library System
 // Name: ____________________   Roll no: ____________
 
-const String rollNo = '040732313027'; // e.g. '21F-0347'
+const String rollNo = '04072313027'; // e.g. '21F-0347'
 
 // ===== Seeded settings (generated from YOUR roll number). Do not edit. =====
 final int seed = int.parse(rollNo.substring(rollNo.length - 2));
@@ -31,6 +31,13 @@ final int renewAttempts = 2 + u; // renewal attempts made in Step 5
 final int shelfSize = 3 + u % 4; // items on the shelf in Steps 9-10
 // ===========================================================================
 
+// ---------- Step 4: contract ----------
+abstract class Borrowable {
+  bool get isAvailable;
+  void borrow();
+  void giveBack();
+}
+
 abstract class LibraryItem {
   final String title;
   final int year;
@@ -42,8 +49,9 @@ abstract class LibraryItem {
   int lateFee(int days);
 }
 
-class Book extends LibraryItem {
+class Book extends LibraryItem implements Borrowable {
   final int pages;
+  bool _out = false;
 
   Book(super.title, super.year, this.pages);
 
@@ -52,6 +60,15 @@ class Book extends LibraryItem {
 
   @override
   int lateFee(int days) => days * feePerDay;
+
+  @override
+  bool get isAvailable => !_out;
+
+  @override
+  void borrow() => _out = true;
+
+  @override
+  void giveBack() => _out = false;
 }
 
 class Magazine extends LibraryItem {
@@ -143,6 +160,19 @@ void step3() {
 
 void step4() {
   print('--- Step 4 ---');
+  final book = mainBook();
+  print('Step 4: available? ${book.isAvailable}');
+  book.borrow();
+  print('Step 4: after borrow? ${book.isAvailable}');
+  book.giveBack();
+  print('Step 4: after return? ${book.isAvailable}');
+  final List<LibraryItem> items = [book, mainMagazine(), mainDvd()];
+  for (final item in items) {
+    print('Step 4: ${item.runtimeType} borrowable? ${item is Borrowable}');
+  }
+  // Think: extends Borrowable would have given us its ready-made code for
+  // free, but Borrowable has no code, and Book can only extend one class
+  // (it already extends LibraryItem). We wanted just the promise.
 }
 
 void step5() {
