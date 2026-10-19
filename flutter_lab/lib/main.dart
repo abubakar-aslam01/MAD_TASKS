@@ -218,10 +218,12 @@ class Countdown extends StatefulWidget {
 class _CountdownState extends State<Countdown> {
   late int _left;
   late Timer _timer;
+  int _builds = 0;
 
   @override
   void initState() {
     super.initState();
+    lifecycleLog.add('initState');
     _left = startSeconds;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() => _left--);
@@ -235,14 +237,25 @@ class _CountdownState extends State<Countdown> {
     // is removed and calls setState() on a disposed State:
     // "setState() called after dispose()".
     _timer.cancel();
+    lifecycleLog.add('dispose');
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _left > 0
-        ? Text('Time left: $_left s', key: const Key('time-left'))
-        : const Text('Time is up!', key: Key('time-left'));
+    // Think (Step 9): +1 per second, not +2, because each tick calls setState
+    // exactly once, and one setState = one build. You could print(lifecycleLog)
+    // inside dispose() to prove dispose ran.
+    _builds++;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _left > 0
+            ? Text('Time left: $_left s', key: const Key('time-left'))
+            : const Text('Time is up!', key: Key('time-left')),
+        Text('Builds: $_builds', key: const Key('builds')),
+      ],
+    );
   }
 }
 
