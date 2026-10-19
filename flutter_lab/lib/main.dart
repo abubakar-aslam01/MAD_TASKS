@@ -77,6 +77,8 @@ class HomePage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Tally(),
+            const SizedBox(height: 12),
+            const BuggyCounter(),
           ],
         ),
       ),
@@ -217,6 +219,8 @@ class _BuggyCounterState extends State<BuggyCounter> {
 
   @override
   Widget build(BuildContext context) {
+    // Think (Step 7): before the fix, after 3 taps _clicks inside the State
+    // was 3 * bugStep, but the screen still showed 0 (no rebuild happened).
     return Row(
       children: [
         Text('Bug clicks: $_clicks', key: const Key('bug-text')),
@@ -224,7 +228,9 @@ class _BuggyCounterState extends State<BuggyCounter> {
         ElevatedButton(
           key: const Key('bug-button'),
           onPressed: () {
-            _clicks += bugStep;
+            setState(() {
+              _clicks += bugStep;
+            });
           },
           child: Text('+$bugStep'),
         ),
