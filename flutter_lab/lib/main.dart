@@ -37,6 +37,7 @@ final List<String> lifecycleLog = <String>[];
 
 void main() => runApp(const LabApp());
 
+// Stateless: LabApp only wraps the app and never changes by itself.
 // Keep the name LabApp and its const constructor: the checker uses them.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
@@ -50,6 +51,7 @@ class LabApp extends StatelessWidget {
   }
 }
 
+// Stateless: the page layout is fixed; the changing parts live in other widgets.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -88,6 +90,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
+// Stateless: it only shows the 3 values it was given.
 class StudentCard extends StatelessWidget {
   // Think (Step 2): fields are final because a StatelessWidget is immutable;
   // without final the analyzer complains that a class with a const
@@ -121,6 +124,7 @@ class StudentCard extends StatelessWidget {
   }
 }
 
+// Stateless: its output depends only on count and max given by the parent.
 class GoalBanner extends StatelessWidget {
   // Think (Step 4): no setState needed because it holds no changing data.
   // To show a new count the parent rebuilds and passes a new count.
@@ -139,6 +143,7 @@ class GoalBanner extends StatelessWidget {
   }
 }
 
+// Stateful: the tally changes when the user taps the buttons.
 class Tally extends StatefulWidget {
   // Think (Step 5): two classes because the widget is immutable configuration
   // (recreated on rebuild), while the State object lives on and keeps the
@@ -208,6 +213,7 @@ class _TallyState extends State<Tally> {
   }
 }
 
+// Stateful: the seconds left and build counter change over time.
 class Countdown extends StatefulWidget {
   const Countdown({super.key});
 
@@ -260,6 +266,7 @@ class _CountdownState extends State<Countdown> {
 }
 
 // ---- Provided for Step 7. It has a bug on purpose. Do not rename anything.
+// Stateful: the click counter changes when the button is tapped.
 class BuggyCounter extends StatefulWidget {
   const BuggyCounter({super.key});
 
