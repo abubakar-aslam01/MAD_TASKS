@@ -119,6 +119,8 @@ class HomePage extends StatelessWidget {
             const SummaryRow(),
             const SizedBox(height: 12),
             const ShareRow(),
+            const SizedBox(height: 12),
+            const InfoBox(),
           ],
         ),
       ),
@@ -415,6 +417,29 @@ class ShareRow extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class InfoBox extends StatelessWidget {
+  const InfoBox({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Think (Step 9): padding is inside the border (space between the border
+    // and the text); margin is outside it. I use a plain Padding or SizedBox
+    // when I only need empty space or a fixed size and no decoration (no
+    // colour, border or rounded corners); they are lighter and clearer.
+    return Container(
+      key: const Key('info-box'),
+      margin: EdgeInsets.all(boxMargin),
+      padding: EdgeInsets.all(boxPad),
+      decoration: BoxDecoration(
+        color: swatches[hue]!.shade100,
+        borderRadius: BorderRadius.circular(boxRadius),
+        border: Border.all(width: boxBorder),
+      ),
+      child: Text('Course: $course', key: const Key('box-text')),
     );
   }
 }
