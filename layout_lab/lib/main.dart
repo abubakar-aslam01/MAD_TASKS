@@ -117,6 +117,8 @@ class HomePage extends StatelessWidget {
             const InfoPanel(),
             const SizedBox(height: 12),
             const SummaryRow(),
+            const SizedBox(height: 12),
+            const ShareRow(),
           ],
         ),
       ),
@@ -372,6 +374,45 @@ class InfoPanel extends StatelessWidget {
             Text('Roll no: $rollNo', key: const Key('col-b')),
             Text('Course: $course', key: const Key('col-c')),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class ShareRow extends StatelessWidget {
+  const ShareRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Think (Step 8): if Expanded and Flexible were swapped, the button that is
+    // now Expanded ("Flex") would stretch to fill its share and the other one
+    // ("Exp") would shrink back to its natural small size. Expanded is the same
+    // as Flexible with fit: FlexFit.tight (it must fill its share); Flexible
+    // uses FlexFit.loose by default (it may stay smaller).
+    return Row(
+      key: const Key('share-row'),
+      children: [
+        SizedBox(
+          key: const Key('fixed'),
+          width: fixedW,
+          child: ElevatedButton(onPressed: () {}, child: const Text('F')),
+        ),
+        Expanded(
+          flex: flexA,
+          child: ElevatedButton(
+            key: const Key('exp'),
+            onPressed: () {},
+            child: const Text('Exp'),
+          ),
+        ),
+        Flexible(
+          flex: flexB,
+          child: ElevatedButton(
+            key: const Key('flex'),
+            onPressed: () {},
+            child: const Text('Flex'),
+          ),
         ),
       ],
     );
