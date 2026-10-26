@@ -208,6 +208,44 @@ class _ClockState extends State<Clock> {
       children: [
         Text('Session: $_seconds s', key: const Key('clock')),
         Text('Builds: $_builds', key: const Key('builds')),
+        Probe(seconds: _seconds),
+      ],
+    );
+  }
+}
+
+class Probe extends StatelessWidget {
+  final int seconds;
+
+  const Probe({super.key, required this.seconds});
+
+  @override
+  Widget build(BuildContext context) {
+    // Think (Step 3): the Widget is the cheap one that is thrown away and made
+    // new on every rebuild (its #number changes each second). The Element is
+    // the long-lived one that stays in the tree and holds the State (its
+    // #number stays the same). The RenderObject sits in the third tree (the
+    // render tree); it is also kept, and its job is layout (size and position)
+    // and painting on the screen.
+    final bool above =
+        context.findAncestorWidgetOfExactType<Scaffold>() != null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Seen at: $seconds s', key: const Key('probe-seen')),
+        Text(
+          'Widget #${identityHashCode(this)}',
+          key: const Key('probe-widget'),
+        ),
+        Text(
+          'Element #${identityHashCode(context)}',
+          key: const Key('probe-element'),
+        ),
+        Text(
+          'Context belongs to: ${context.widget.runtimeType}',
+          key: const Key('probe-context'),
+        ),
+        Text('Scaffold above me: $above', key: const Key('probe-above')),
       ],
     );
   }
