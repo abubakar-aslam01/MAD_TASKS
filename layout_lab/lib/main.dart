@@ -85,6 +85,7 @@ final List<String> lifecycleLog = <String>[];
 void main() => runApp(const LabApp());
 
 // Keep the name LabApp and its const constructor: the checker uses them.
+// Stateless: LabApp only wraps the app and never changes by itself.
 class LabApp extends StatelessWidget {
   const LabApp({super.key});
 
@@ -94,6 +95,7 @@ class LabApp extends StatelessWidget {
   }
 }
 
+// Stateless: the page layout is fixed; the changing parts live in other widgets.
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -121,6 +123,8 @@ class HomePage extends StatelessWidget {
             const ShareRow(),
             const SizedBox(height: 12),
             const InfoBox(),
+            const SizedBox(height: 12),
+            const StampStack(),
           ],
         ),
       ),
@@ -129,6 +133,7 @@ class HomePage extends StatelessWidget {
 }
 
 // ---- Provided: shows YOUR numbers. Keep it on the page. Do not rename.
+// Stateless: it only prints the seeded numbers.
 class SettingsCard extends StatelessWidget {
   const SettingsCard({super.key});
 
@@ -150,6 +155,7 @@ class SettingsCard extends StatelessWidget {
 }
 
 // ---- Provided for Step 7. It overflowed on purpose; now fixed with Expanded.
+// Stateless: a fixed row of three texts.
 class SummaryRow extends StatelessWidget {
   const SummaryRow({super.key});
 
@@ -185,6 +191,7 @@ class SummaryRow extends StatelessWidget {
   }
 }
 
+// Stateful: the seconds and the build counter change over time.
 class Clock extends StatefulWidget {
   const Clock({super.key});
 
@@ -237,6 +244,7 @@ class _ClockState extends State<Clock> {
   }
 }
 
+// Stateless: it only shows what it is given; it is rebuilt by its parent.
 class Probe extends StatelessWidget {
   final int seconds;
 
@@ -274,6 +282,7 @@ class Probe extends StatelessWidget {
   }
 }
 
+// Stateless: a fixed welcome text.
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
@@ -285,6 +294,7 @@ class Welcome extends StatelessWidget {
   }
 }
 
+// Stateful: every tile remembers its own number of taps.
 class Tile extends StatefulWidget {
   const Tile(this.label, {super.key});
 
@@ -310,6 +320,7 @@ class _TileState extends State<Tile> {
   }
 }
 
+// Stateful: it keeps the list of tiles and reverses it on Swap.
 class SwapBoard extends StatefulWidget {
   const SwapBoard({super.key});
 
@@ -347,6 +358,7 @@ class _SwapBoardState extends State<SwapBoard> {
   }
 }
 
+// Stateless: shows fixed values in a Row and a Column.
 class InfoPanel extends StatelessWidget {
   const InfoPanel({super.key});
 
@@ -382,6 +394,7 @@ class InfoPanel extends StatelessWidget {
   }
 }
 
+// Stateless: a fixed row that shares its width.
 class ShareRow extends StatelessWidget {
   const ShareRow({super.key});
 
@@ -421,6 +434,7 @@ class ShareRow extends StatelessWidget {
   }
 }
 
+// Stateless: a decorated box with fixed values.
 class InfoBox extends StatelessWidget {
   const InfoBox({super.key});
 
@@ -440,6 +454,41 @@ class InfoBox extends StatelessWidget {
         border: Border.all(width: boxBorder),
       ),
       child: Text('Course: $course', key: const Key('box-text')),
+    );
+  }
+}
+
+// Stateless: a fixed Stack with two pinned icons.
+class StampStack extends StatelessWidget {
+  const StampStack({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Think (Step 10): the size of a Stack is decided by its non-positioned
+    // children (here the grey Container, 300 x 120); Positioned children do not
+    // change the size. If the Icons came first and the grey Container last, the
+    // grey layer would be on top and would cover (hide) the star and the circle,
+    // because the first child is the bottom layer.
+    return Stack(
+      key: const Key('stack'),
+      children: [
+        Container(
+          key: const Key('layer-base'),
+          width: 300,
+          height: 120,
+          color: Colors.grey.shade300,
+        ),
+        Positioned(
+          top: dotTop,
+          right: dotRight,
+          child: const Icon(Icons.star, key: Key('dot-top')),
+        ),
+        Positioned(
+          bottom: dotBottom,
+          left: dotLeft,
+          child: const Icon(Icons.circle, key: Key('dot-bottom')),
+        ),
+      ],
     );
   }
 }
